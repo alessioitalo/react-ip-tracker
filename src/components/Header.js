@@ -6,7 +6,7 @@ import Input from "./Input";
 const StyledHeader = styled.div`
   background-image: url(${logoBackground});
   background-repeat: no-repeat;
-  background-size: auto;
+  background-size: cover;
   background-position: 55% 0%;
   height: 15rem;
   width: 100%;
