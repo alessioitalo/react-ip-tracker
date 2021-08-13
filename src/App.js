@@ -7,6 +7,8 @@ import Loading from "./components/Loading";
 import IpMap from "./components/IpMap";
 import ErrorMessage from "./components/ErrorMessage";
 
+const API_KEY = process.env.REACT_APP_API_KEY;
+
 function App() {
   const [ipResponse, setIpResponse] = useState({
     query: "",
@@ -17,21 +19,32 @@ function App() {
     isp: "",
   });
   const [isLoading, setIsLoading] = useState(true);
-  // const [ip, setIp] = useState("");
-  // const [timezone, setTimezone] = useState("");
-  // const [isp, setIsp] = useState("");
-  // const [location, setLocation] = useState("");
-  // const [coordinates, setCoordinates] = useState();
   const [showError, setShowError] = useState(false);
+  const [showMap, setShowMap] = useState(false);
 
   const fetchIpData = async (givenIp) => {
+    setShowMap(false);
     try {
-      const response = await axios.get(`http://ip-api.com/json/${givenIp}`);
+      const response = await axios.get(
+        `https://geo.ipify.org/api/v1?apiKey=${API_KEY}&ipAddress=${givenIp}&domain=${givenIp}`
+      );
       await setIsLoading(false);
-      if (response.data.status === "fail") {
+      if (response.statusText !== "OK") {
         throw new Error();
       }
-      await setIpResponse(response.data);
+      await setIpResponse({
+        query: response.data.ip,
+        city: response.data.location.city,
+        regionName: response.data.location.region,
+        countryCode: response.data.location.country,
+        timezone: response.data.location.timezone,
+        isp: response.data.isp,
+        coordinates: [
+          `${response.data.location.lat}`,
+          `${response.data.location.lng}`,
+        ],
+      });
+      setShowMap(true);
     } catch (error) {
       setShowError(true);
     }
@@ -39,6 +52,7 @@ function App() {
 
   useEffect(() => {
     fetchIpData("");
+    setIsLoading(false);
   }, []);
 
   return (
@@ -47,7 +61,7 @@ function App() {
       <Header fetchData={fetchIpData} />
       {showError && <ErrorMessage closeError={() => setShowError(false)} />}
       <Info ipResponse={ipResponse} />
-      <IpMap coordinates={[ipResponse.lat, ipResponse.lon]} />
+      {showMap && <IpMap coordinates={ipResponse.coordinates} />}
     </div>
   );
 }

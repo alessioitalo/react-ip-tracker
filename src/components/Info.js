@@ -42,14 +42,13 @@ const StyledInfo = styled.div`
 `;
 
 function Info(props) {
-  const formattedTimezone = `${props.ipResponse.timezone}`.split('/')
+  const formattedTimezone = `${props.ipResponse.timezone}`.split("/");
 
   return (
     <StyledInfo>
       <div>
         IP ADDRESS
         <div>
-          {/* <strong>{props.ip}</strong> */}
           <strong>{props.ipResponse.query}</strong>
         </div>
       </div>
@@ -57,25 +56,19 @@ function Info(props) {
       <div className="with-line">
         LOCATION
         <div>
-          {/* <strong>{props.location}</strong> */}
           <strong>{`${props.ipResponse.city} ${props.ipResponse.regionName} ${props.ipResponse.countryCode}`}</strong>
-
         </div>
       </div>
       <div className="with-line">
         TIMEZONE
         <div>
-          {/* <strong>{props.timezone}</strong> */}
-          <strong>{`${formattedTimezone[0]} ${formattedTimezone[1]}`}</strong>
-
+          <strong>{formattedTimezone}</strong>
         </div>
       </div>
       <div className="with-line">
         ISP
         <div>
-          {/* <strong>{props.isp}</strong> */}
           <strong>{props.ipResponse.isp}</strong>
-
         </div>
       </div>
     </StyledInfo>
